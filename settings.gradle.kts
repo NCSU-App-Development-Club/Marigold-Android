@@ -12,5 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Marigold"
-include ':app'
+
+rootProject.name = "Marigold-Android"
+include(":app")

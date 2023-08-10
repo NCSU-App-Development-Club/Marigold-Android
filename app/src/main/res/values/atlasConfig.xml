@@ -1,0 +1,9 @@
+<resources>
+    <string name="realm_app_id">marigold-ysffq</string>
+    <string name="realm_app_url">https://realm.mongodb.com/groups/64d3ae0f1eff245d87a9e075/apps/64d3af11667ac4c49d073fa3</string>
+    <string name="realm_base_url">https://realm.mongodb.com</string>
+    <string name="realm_client_api_base_url">https://us-east-1.aws.realm.mongodb.com</string>
+    <string name="realm_data_api_base_url">https://us-east-1.aws.data.mongodb-api.com</string>
+    <string name="realm_data_explorer_link">https://cloud.mongodb.com/links/64d3ae0f1eff245d87a9e075/explorer/AtlasCluster/database/collection/find</string>
+    <string name="realm_data_source_name">mongodb-atlas</string>
+</resources>
