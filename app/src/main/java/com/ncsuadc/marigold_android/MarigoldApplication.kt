@@ -16,6 +16,7 @@ class MarigoldApplication : Application() {
                 .baseUrl(getString(R.string.realm_base_url))
                 .build()
         )
+
         // Initialization code here, e.g., Realm.init(this)
     }
 }
