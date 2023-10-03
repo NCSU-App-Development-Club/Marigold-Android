@@ -1,11 +1,7 @@
 <resources>
-<<<<<<< Updated upstream
-    <string name="app_name">Marigold</string>
     <string name="title_activity_main">MainActivity</string>
-=======
     <string name="app_name">Marigold-Android</string>
     <string name="title_activity_sign_up_view">SignUpView</string>
-    <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="create_account">Create Account</string>
@@ -30,5 +26,5 @@
     <string name="unable_to_switch">Switching subscriptions does not affect Realm data when Sync is offline</string>
     <string name="permissions_warning">You can only modify or remove tasks that belong to you.</string>
     <string name="title_activity_home">HomeActivity</string>
->>>>>>> Stashed changes
+    <string name="title_activity_test">TestActivity</string>
 </resources>
