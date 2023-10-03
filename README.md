@@ -28,12 +28,12 @@ The Club's solution is a dedicated application that serves as a centralized plat
 ### 📈 University Collaboration: Efforts are underway to potentially position this as the official NC State club app.
 
 ## Android Team:
-**Android Lead: Xavier Jones**
-*Will Pressler*
-*Peter Ising*
-*Daniel Briceno*
-*Sahiti Talluri*
-*Sahithi Ammana*
-*Koray Ozturkler*
-*Makayla Harman*
+- **Android Lead:** *Xavier Jones*
+- *Will Pressler*
+- *Peter Ising*
+- *Daniel Briceno*
+- *Sahiti Talluri*
+- *Sahithi Ammana*
+- *Koray Ozturkler*
+- *Makayla Harman*
 
