@@ -11,11 +11,6 @@ lateinit var app: App
 class MarigoldApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        app = App.create(
-            AppConfiguration.Builder(getString(R.string.realm_app_id))
-                .baseUrl(getString(R.string.realm_base_url))
-                .build()
-        )
 
         // Initialization code here, e.g., Realm.init(this)
 
