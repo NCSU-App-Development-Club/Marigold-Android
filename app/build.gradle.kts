@@ -93,6 +93,7 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui-graphics")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    implementation("androidx.compose.material:material-icons-extended:1.6.0-alpha07")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
