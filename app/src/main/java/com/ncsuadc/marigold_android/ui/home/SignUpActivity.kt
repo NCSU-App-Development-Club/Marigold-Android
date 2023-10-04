@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -52,6 +51,8 @@ class SignUpActivity : ComponentActivity() {
 private fun SignUpColumn(modifier: Modifier = Modifier) {
     Column(verticalArrangement = Arrangement.Bottom, modifier = modifier.padding(all = 16.dp)) {
         TitleText()
+        Spacer(modifier = Modifier.padding(top = 16.dp))
+        CreateAccountText()
     }
 }
 
@@ -88,5 +89,25 @@ private fun TitleText(modifier: Modifier = Modifier) {
             }
         },
         style = SIGN_UP_TITLE_STYLE
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CreateAccountText(modifier: Modifier = Modifier) {
+    Text(
+        buildAnnotatedString {
+            withStyle(SIGN_UP_TITLE_STYLE.toSpanStyle()) {
+                append("Create an account.\n")
+            }
+            append("Already have an account? ")
+            pushStringAnnotation(tag = "sign-in", annotation = "Sign up!")
+            withStyle(SpanStyle(color = Color(0xffffb320), textDecoration = TextDecoration.Underline)) {
+                append("Sign In")
+            }
+            pop()
+
+        },
+        style = TextStyle(fontSize = 15.sp)
     )
 }
