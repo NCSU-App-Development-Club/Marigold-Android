@@ -27,4 +27,5 @@
     <string name="permissions_warning">You can only modify or remove tasks that belong to you.</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
 </resources>
