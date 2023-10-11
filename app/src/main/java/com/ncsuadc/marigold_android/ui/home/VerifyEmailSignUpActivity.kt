@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -129,6 +130,7 @@ private fun VerifyAccountText(modifier: Modifier = Modifier) {
         pop()
 
     }
+    val color = MaterialTheme.colorScheme.onBackground
 
     ClickableText(
         text,
@@ -141,7 +143,7 @@ private fun VerifyAccountText(modifier: Modifier = Modifier) {
             }
 
         },
-        style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold),
+        style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold, color = color),
         modifier = modifier
     )
 }
