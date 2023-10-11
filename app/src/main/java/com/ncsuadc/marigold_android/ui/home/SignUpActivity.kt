@@ -52,6 +52,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ncsuadc.marigold_android.ui.home.shared.GradientButton
+import com.ncsuadc.marigold_android.ui.home.shared.SIGN_UP_TITLE_STYLE
+import com.ncsuadc.marigold_android.ui.home.shared.TitleText
 import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
 
 class SignUpActivity : ComponentActivity() {
@@ -59,7 +62,10 @@ class SignUpActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MarigoldTheme {
-                Surface {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background  // TODO: change to img
+                ) {
                     SignUpColumn(
                         modifier = Modifier
                             .verticalScroll(rememberScrollState())
@@ -99,39 +105,13 @@ private fun SignUpColumn(modifier: Modifier = Modifier) {
 @Composable
 private fun SignUpColumnPreview() {
     MarigoldTheme {
-        Surface {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
             SignUpColumn(modifier = Modifier.fillMaxSize())
         }
     }
-}
-
-
-// Should this be in the theme or typography file?
-val SIGN_UP_TITLE_STYLE = TextStyle(fontWeight = FontWeight.ExtraBold, fontSize = 35.sp)
-
-@Composable
-private fun TitleText(modifier: Modifier = Modifier) {
-    Text(
-        buildAnnotatedString {
-            withStyle(
-                SpanStyle(
-                    brush = Brush.linearGradient(
-                        // If we plan to use these colors more often we should make them a constant
-                        // somewhere/add it to the theme. I'm not sure how to do this, however.
-                        colors = listOf(Color(0xffffe501), Color(0xffffb320))
-                    )
-                )
-            ) {
-                append("Marigold ")
-            }
-            append("@\n")
-            withStyle(SpanStyle(color = Color(0xffff3737))) {
-                append("NC State University")
-            }
-        },
-        style = SIGN_UP_TITLE_STYLE,
-        modifier = modifier
-    )
 }
 
 @Composable
@@ -197,33 +177,6 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Sign Up",
                 modifier = Modifier.width(24.dp))
-        }
-    }
-}
-
-// I took some liberties with the gradient button, but I think it looks better this way.
-// Feel free to change it if you disagree.
-@Composable
-fun GradientButton(
-    gradient : Brush,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = { },
-    content: @Composable () -> Unit
-) {
-    Button(
-        modifier = modifier,
-        colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-        shape = MaterialTheme.shapes.medium,
-        contentPadding = PaddingValues(),
-        onClick = { onClick() },
-    ) {
-        Row(
-            modifier = Modifier
-                .background(gradient)
-                .padding(horizontal = 20.dp, vertical = 15.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            content()
         }
     }
 }

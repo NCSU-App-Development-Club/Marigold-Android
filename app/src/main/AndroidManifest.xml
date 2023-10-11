@@ -13,6 +13,11 @@
         android:theme="@style/Theme.Marigold"
         tools:targetApi="31">
         <activity
+            android:name=".ui.home.VerifyEmailSignUpActivity"
+            android:exported="false"
+            android:label="@string/title_activity_verify_email_sign_up"
+            android:theme="@style/Theme.Marigold" />
+        <activity
             android:name=".ui.home.SignUpActivity"
             android:exported="false"
             android:label="@string/title_activity_sign_up"
