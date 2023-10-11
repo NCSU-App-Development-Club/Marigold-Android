@@ -4,11 +4,8 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,8 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -64,7 +58,9 @@ class SignUpActivity : ComponentActivity() {
             MarigoldTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background  // TODO: change to img
+                    color = MaterialTheme.colorScheme.background
+
+
                 ) {
                     SignUpColumn(
                         modifier = Modifier
@@ -108,6 +104,7 @@ private fun SignUpColumnPreview() {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
+
         ) {
             SignUpColumn(modifier = Modifier.fillMaxSize())
         }
@@ -134,7 +131,7 @@ private fun CreateAccountText(modifier: Modifier = Modifier) {
             pop()
 
         },
-        style = TextStyle(fontSize = 15.sp),
+        style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold),
         modifier = modifier
     )
 }
@@ -199,7 +196,7 @@ private fun SignUpTextField(
         visualTransformation = if (!passwordVisibility)
             VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = keyboardOptions,
-        maxLines = 1,
+        singleLine = true,
         onValueChange = onValueChange,
         label = { Text(text = label) },
         shape = MaterialTheme.shapes.medium,
@@ -227,4 +224,27 @@ private fun SignUpTextField(
             .fillMaxWidth()
             .then(modifier)
     )
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun SignUpTextFieldPreview() {
+    var silly by remember { mutableStateOf("") }
+
+    MarigoldTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background
+
+        ) {
+            SignUpTextField(
+                label = "E-Mail",
+                value = silly,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                ),
+                onValueChange = { silly = it }
+            )
+        }
+    }
 }
