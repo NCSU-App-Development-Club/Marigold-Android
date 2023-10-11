@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
@@ -30,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -119,7 +122,7 @@ private fun CreateAccountText(modifier: Modifier = Modifier) {
                 append("Create an account.\n")
             }
             append("Already have an account? ")
-            pushStringAnnotation(tag = "sign-in", annotation = "Sign up!")
+            pushStringAnnotation(tag = "sign-in", annotation = "sign-in")
             withStyle(
                 SpanStyle(
                     color = Color(0xffffb320),
@@ -139,25 +142,110 @@ private fun CreateAccountText(modifier: Modifier = Modifier) {
 // I feel like there should be an easier way to get all children to stretch with the column.
 // (Similar to CrossAxisAlignment.stretch in Flutter)
 // https://api.flutter.dev/flutter/rendering/CrossAxisAlignment.html
+enum class EmailValidation(val description: String? = null) {
+    EMPTY("Please enter an e-mail"),
+    NOT_NC_STATE("Please enter a valid NC State e-mail"),
+    VALID
+}
+enum class PasswordValidation(val description: String? = null) {
+    EMPTY("Please enter a password"),
+    VALID
+}
+enum class ConfirmPasswordValidation(val description: String? = null) {
+    EMPTY("Please confirm your password"),
+    DOES_NOT_MATCH("Passwords do not match"),
+    VALID
+}
+
 @Composable
 private fun SignUpForm(modifier: Modifier = Modifier) {
+    // switch to validating while typing if user failed once.
+    var validationFailed by remember { mutableStateOf(false) }
+
     var email by remember { mutableStateOf("") }
+    var emailValid by remember { mutableStateOf(EmailValidation.VALID) }
+    val emailValidation = {
+        emailValid = if (email.isBlank()) {
+            EmailValidation.EMPTY
+        } else if (!email.endsWith("@ncsu.edu") || email.startsWith("@ncsu.edu")) {
+            EmailValidation.NOT_NC_STATE
+        } else {
+            EmailValidation.VALID
+        }
+
+        emailValid == EmailValidation.VALID
+    }
+
     var password by remember { mutableStateOf("") }
+    var passwordValid by remember { mutableStateOf(PasswordValidation.VALID) }
+    val passwordValidation = {
+        passwordValid = if (password.isBlank()) {
+            PasswordValidation.EMPTY
+        } else {
+            PasswordValidation.VALID
+        }
+
+        passwordValid == PasswordValidation.VALID
+    }
+
+    var confirmPassword by remember { mutableStateOf("") }
+    var confirmPasswordValid by remember { mutableStateOf(ConfirmPasswordValidation.VALID) }
+    val confirmPasswordValidation = {
+        confirmPasswordValid = if (confirmPassword.isBlank()) {
+            ConfirmPasswordValidation.EMPTY
+        } else if (confirmPassword != password) {
+            ConfirmPasswordValidation.DOES_NOT_MATCH
+        } else {
+            ConfirmPasswordValidation.VALID
+        }
+
+        confirmPasswordValid == ConfirmPasswordValidation.VALID
+    }
+
+
+    val allValid = {
+        val emailValidated = emailValidation()
+        val passwordValidated = passwordValidation()
+        val confirmPasswordValidated = confirmPasswordValidation()
+        emailValidated && passwordValidated && confirmPasswordValidated
+    }
 
     Column(modifier = modifier) {
-        SignUpTextField(label = "E-Mail", value = email, keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next), onValueChange = { email = it })
-        Spacer(modifier = Modifier.padding(8.dp))
-        SignUpTextField(label = "Password", password = true, value = password, keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Next), onValueChange = { password = it })
-        Spacer(modifier = Modifier.padding(8.dp))
-        // What's this one for?
-        SignUpTextField(label = "Confirm ???", password = true, value = "", keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Done),
-            onValueChange = { /*TODO*/ })
+        if (emailValid != EmailValidation.VALID) InvalidBanner(emailValid.description)
+        SignUpTextField(
+            label = "E-Mail",
+            value = email,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+            onValueChange = {
+                email = it
+                if (validationFailed) emailValidation()
+            },
+            isError = emailValid != EmailValidation.VALID
+        )
+        if (passwordValid != PasswordValidation.VALID) InvalidBanner(passwordValid.description)
+        else Spacer(modifier = Modifier.padding(8.dp))
+        SignUpTextField(
+            label = "Password",
+            password = true, value = password,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
+            onValueChange = {
+                password = it
+                if (validationFailed) passwordValidation()
+            },
+            isError = passwordValid != PasswordValidation.VALID
+        )
+        if (confirmPasswordValid != ConfirmPasswordValidation.VALID) InvalidBanner(confirmPasswordValid.description)
+        else Spacer(modifier = Modifier.padding(8.dp))
+        SignUpTextField(label = "Confirm password",
+            password = true,
+            value = confirmPassword,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+            onValueChange = {
+                confirmPassword = it
+                if (validationFailed) confirmPasswordValidation()
+            },
+            isError = confirmPasswordValid != ConfirmPasswordValidation.VALID
+        )
         Spacer(modifier = Modifier.padding(8.dp))
         GradientButton(
             gradient = Brush.horizontalGradient(
@@ -165,7 +253,13 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
             ),
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = { /*TODO*/ }
+            onClick = {
+                if (allValid()) {
+                    // Do something
+                } else if (!validationFailed) {
+                    validationFailed = true
+                }
+            }
 
         ) {
             Text("Sign Up", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold))
@@ -178,6 +272,15 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun InvalidBanner(text: String?, modifier: Modifier = Modifier) {
+    Row(modifier = Modifier.padding(top = 8.dp, bottom = 8.dp).then(modifier), verticalAlignment = Alignment.CenterVertically) {
+        Icon(Icons.Filled.Error, contentDescription = "Error", tint = MaterialTheme.colorScheme.error)
+        Spacer(modifier = Modifier.padding(4.dp))
+        Text(text ?: "", color = MaterialTheme.colorScheme.error)
+    }
+}
+
 // Should probably put in a common file with SignInActivity
 // when that's done so they can both use one
 @Composable
@@ -186,6 +289,7 @@ private fun SignUpTextField(
     onValueChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
+    isError : Boolean = false,
     password: Boolean = false,
     label: String = "",
 ) {
@@ -193,6 +297,7 @@ private fun SignUpTextField(
 
     TextField(
         value = value,
+        isError = isError,
         visualTransformation = if (!passwordVisibility)
             VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = keyboardOptions,
@@ -219,6 +324,7 @@ private fun SignUpTextField(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
         ),
         modifier = Modifier
             .fillMaxWidth()
