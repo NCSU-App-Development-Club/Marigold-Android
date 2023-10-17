@@ -1,5 +1,6 @@
 package com.ncsuadc.marigold_android.ui.home
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -36,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -159,6 +161,8 @@ enum class ConfirmPasswordValidation(val description: String? = null) {
 
 @Composable
 private fun SignUpForm(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
     // switch to validating while typing if user failed once.
     var validationFailed by remember { mutableStateOf(false) }
 
@@ -255,7 +259,8 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
                 .fillMaxWidth(),
             onClick = {
                 if (allValid()) {
-                    // Do something
+                    // go to other screen
+                    context.startActivity(Intent(context, VerifyEmailSignUpActivity::class.java))
                 } else if (!validationFailed) {
                     validationFailed = true
                 }
