@@ -181,6 +181,7 @@ fun VerifyForm(modifier: Modifier = Modifier) {
                     } else if (it.isEmpty()) {
                         localFocusManager.clearFocus()
                     } else if (it.length == 4) {
+                        // if the user pastes a 4 digit code, we want to split it up
                         digit1 = it[0].toString()
                         digit2 = it[1].toString()
                         digit3 = it[2].toString()
