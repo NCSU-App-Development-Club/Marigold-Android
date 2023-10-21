@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import com.ncsuadc.marigold_android.ui.home.shared.GradientButton
+import com.ncsuadc.marigold_android.ui.home.shared.InvalidBanner
 import com.ncsuadc.marigold_android.ui.home.shared.SIGN_UP_TITLE_STYLE
 import com.ncsuadc.marigold_android.ui.home.shared.TitleText
 import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
@@ -155,12 +156,18 @@ fun VerifyForm(modifier: Modifier = Modifier) {
     var digit3 by remember { mutableStateOf("") }
     var digit4 by remember { mutableStateOf("") }
 
+    var valid by remember { mutableStateOf(true) }
+    val validation = {
+        valid = digit1.isNotEmpty() && digit2.isNotEmpty() && digit3.isNotEmpty() && digit4.isNotEmpty()
+        valid
+    }
+
     val localFocusManager = LocalFocusManager.current
 
     Column(modifier = modifier) {
         Text("We sent a verification code to your email. Please input the code below.",
             style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold))
-        Spacer(modifier = Modifier.padding(8.dp))
+        if (!valid) InvalidBanner(text = "Please enter a valid verification code.") else Spacer(modifier = Modifier.padding(8.dp))
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
@@ -171,9 +178,16 @@ fun VerifyForm(modifier: Modifier = Modifier) {
                     if (it.length <= 1 && it.isDigitsOnly()) {
                         digit1 = it
                     }
+
                     if (it.length == 1) {
                         localFocusManager.moveFocus(FocusDirection.Next)
-                    } else {
+                    } else if (it.isEmpty()) {
+                        localFocusManager.clearFocus()
+                    } else if (it.length == 4) {
+                        digit1 = it[0].toString()
+                        digit2 = it[1].toString()
+                        digit3 = it[2].toString()
+                        digit4 = it[3].toString()
                         localFocusManager.clearFocus()
                     }
                 },
@@ -184,6 +198,7 @@ fun VerifyForm(modifier: Modifier = Modifier) {
                     if (it.length <= 1 && it.isDigitsOnly()) {
                         digit2 = it
                     }
+
                     if (it.length == 1) {
                         localFocusManager.moveFocus(FocusDirection.Next)
                     } else {
@@ -197,6 +212,7 @@ fun VerifyForm(modifier: Modifier = Modifier) {
                     if (it.length <= 1 && it.isDigitsOnly()) {
                         digit3 = it
                     }
+
                     if (it.length == 1) {
                         localFocusManager.moveFocus(FocusDirection.Next)
                     } else {
@@ -211,6 +227,7 @@ fun VerifyForm(modifier: Modifier = Modifier) {
                     if (it.length <= 1 && it.isDigitsOnly()) {
                         digit4 = it
                     }
+
                     if (it.length == 1) {
                         localFocusManager.clearFocus()
                     } else {
@@ -245,7 +262,11 @@ fun VerifyForm(modifier: Modifier = Modifier) {
             ),
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = { /*TODO*/ }
+            onClick = {
+                if (validation()) {
+
+                }
+            }
 
         ) {
             Text("Verify Email", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold))

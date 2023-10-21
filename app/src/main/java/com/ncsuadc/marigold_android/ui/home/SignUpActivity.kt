@@ -52,6 +52,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ncsuadc.marigold_android.ui.home.shared.GradientButton
+import com.ncsuadc.marigold_android.ui.home.shared.InvalidBanner
 import com.ncsuadc.marigold_android.ui.home.shared.SIGN_UP_TITLE_STYLE
 import com.ncsuadc.marigold_android.ui.home.shared.TitleText
 import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
@@ -274,15 +275,6 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
                 contentDescription = "Sign Up",
                 modifier = Modifier.width(24.dp))
         }
-    }
-}
-
-@Composable
-fun InvalidBanner(text: String?, modifier: Modifier = Modifier) {
-    Row(modifier = Modifier.padding(top = 8.dp, bottom = 8.dp).then(modifier), verticalAlignment = Alignment.CenterVertically) {
-        Icon(Icons.Filled.Error, contentDescription = "Error", tint = MaterialTheme.colorScheme.error)
-        Spacer(modifier = Modifier.padding(4.dp))
-        Text(text ?: "", color = MaterialTheme.colorScheme.error)
     }
 }
 

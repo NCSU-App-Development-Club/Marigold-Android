@@ -3,9 +3,13 @@ package com.ncsuadc.marigold_android.ui.home.shared
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -73,5 +77,14 @@ fun GradientButton(
         ) {
             content()
         }
+    }
+}
+
+@Composable
+fun InvalidBanner(text: String?, modifier: Modifier = Modifier) {
+    Row(modifier = Modifier.padding(top = 8.dp, bottom = 8.dp).then(modifier), verticalAlignment = Alignment.CenterVertically) {
+        Icon(Icons.Filled.Error, contentDescription = "Error", tint = MaterialTheme.colorScheme.error)
+        Spacer(modifier = Modifier.padding(4.dp))
+        Text(text ?: "", color = MaterialTheme.colorScheme.error)
     }
 }
