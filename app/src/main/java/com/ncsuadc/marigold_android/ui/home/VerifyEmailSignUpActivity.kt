@@ -1,5 +1,6 @@
 package com.ncsuadc.marigold_android.ui.home
 
+import android.app.Activity
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,11 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,12 +31,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -47,8 +44,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -131,7 +126,9 @@ private fun VerifyAccountText(modifier: Modifier = Modifier) {
         pop()
 
     }
+
     val color = MaterialTheme.colorScheme.onBackground
+    val context = LocalContext.current as? Activity
 
     ClickableText(
         text,
@@ -140,7 +137,7 @@ private fun VerifyAccountText(modifier: Modifier = Modifier) {
                 tag = "back", start = offset, end = offset
             )
             annotations.firstOrNull()?.let {
-                // Do something here!
+                context?.finish()
             }
 
         },
@@ -264,7 +261,7 @@ fun VerifyForm(modifier: Modifier = Modifier) {
                 .fillMaxWidth(),
             onClick = {
                 if (validation()) {
-
+                    // TODO: Verify email
                 }
             }
 
