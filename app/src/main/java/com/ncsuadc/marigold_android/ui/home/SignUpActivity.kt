@@ -71,17 +71,9 @@ class SignUpActivity : ComponentActivity() {
                     SignUpColumn(
                         modifier = Modifier
                             .verticalScroll(rememberScrollState())
-                            .fillMaxSize()/*.paint()...*/
+                            .fillMaxSize()
                     )
                 }
-//                Box(modifier = Modifier
-//                    .fillMaxSize()
-//                    .paint(
-//                        painterResource(id = R.drawable.img),
-//                        contentScale = ContentScale.FillBounds
-//                    )) {
-//
-//                }
             }
         }
     }
@@ -142,9 +134,6 @@ private fun CreateAccountText(modifier: Modifier = Modifier) {
     )
 }
 
-// I feel like there should be an easier way to get all children to stretch with the column.
-// (Similar to CrossAxisAlignment.stretch in Flutter)
-// https://api.flutter.dev/flutter/rendering/CrossAxisAlignment.html
 enum class EmailValidation(val description: String? = null) {
     EMPTY("Please enter an e-mail"),
     NOT_NC_STATE("Please enter a valid NC State e-mail"),
@@ -159,7 +148,6 @@ enum class ConfirmPasswordValidation(val description: String? = null) {
     DOES_NOT_MATCH("Passwords do not match"),
     VALID
 }
-
 @Composable
 private fun SignUpForm(modifier: Modifier = Modifier) {
     val context = LocalContext.current
@@ -327,27 +315,4 @@ private fun SignUpTextField(
             .fillMaxWidth()
             .then(modifier)
     )
-}
-
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun SignUpTextFieldPreview() {
-    var silly by remember { mutableStateOf("") }
-
-    MarigoldTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background
-
-        ) {
-            SignUpTextField(
-                label = "E-Mail",
-                value = silly,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next
-                ),
-                onValueChange = { silly = it }
-            )
-        }
-    }
 }

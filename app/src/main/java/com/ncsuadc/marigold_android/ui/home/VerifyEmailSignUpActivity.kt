@@ -71,7 +71,7 @@ class VerifyEmailSignUpActivity : ComponentActivity() {
                     VerifySignUpColumn(
                         modifier = Modifier
                             .verticalScroll(rememberScrollState())
-                            .fillMaxSize()/*.paint()...*/
+                            .fillMaxSize()
                     )
                 }
             }
