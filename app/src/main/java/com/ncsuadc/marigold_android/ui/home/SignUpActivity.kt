@@ -3,11 +3,11 @@ package com.ncsuadc.marigold_android.ui.home
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +18,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
@@ -32,8 +31,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -51,11 +50,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ncsuadc.marigold_android.ATLAS_APP_ID
 import com.ncsuadc.marigold_android.ui.home.shared.GradientButton
 import com.ncsuadc.marigold_android.ui.home.shared.InvalidBanner
 import com.ncsuadc.marigold_android.ui.home.shared.SIGN_UP_TITLE_STYLE
 import com.ncsuadc.marigold_android.ui.home.shared.TitleText
 import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
+import io.realm.kotlin.mongodb.App
+import kotlinx.coroutines.launch
 
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -240,6 +242,13 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
             isError = confirmPasswordValid != ConfirmPasswordValidation.VALID
         )
         Spacer(modifier = Modifier.padding(8.dp))
+
+        val coroutineScope = rememberCoroutineScope()
+        suspend fun signUp(email: String, password: String) {
+            val app = App.Companion.create(ATLAS_APP_ID)
+            app.emailPasswordAuth.registerUser(email, password)
+        }
+
         GradientButton(
             gradient = Brush.horizontalGradient(
                 colors = listOf(Color(0xffffe501), Color(0xffffb320))
@@ -248,6 +257,11 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
                 .fillMaxWidth(),
             onClick = {
                 if (allValid()) {
+                    // sign up
+                    coroutineScope.launch {
+                        signUp(email, password)
+                    }
+                    Toast.makeText(context, "Signed up!", Toast.LENGTH_SHORT).show()
                     // go to other screen
                     context.startActivity(Intent(context, VerifyEmailSignUpActivity::class.java))
                 } else if (!validationFailed) {
