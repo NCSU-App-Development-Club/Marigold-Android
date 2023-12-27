@@ -58,6 +58,7 @@ import com.ncsuadc.marigold_android.ui.home.shared.TitleText
 import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.exceptions.BadRequestException
+import io.realm.kotlin.mongodb.exceptions.ConnectionException
 import io.realm.kotlin.mongodb.exceptions.UserAlreadyExistsException
 import kotlinx.coroutines.launch
 
@@ -138,90 +139,94 @@ private fun CreateAccountText(modifier: Modifier = Modifier) {
     )
 }
 
-enum class EmailValidation(val description: String? = null) {
+enum class EmailValidationState(val description: String? = null) {
     EMPTY("Please enter an e-mail"),
     NOT_NC_STATE("Please enter a valid NC State e-mail"),
     EMAIL_EXISTS("An account with this e-mail already exists"),
     VALID
 }
-enum class PasswordValidation(val description: String? = null) {
+enum class PasswordValidationState(val description: String? = null) {
     EMPTY("Please enter a password"),
     SHORT("Password must be at least 6 characters"),
     VALID
 }
-enum class ConfirmPasswordValidation(val description: String? = null) {
+enum class ConfirmPasswordValidationState(val description: String? = null) {
     EMPTY("Please confirm your password"),
     DOES_NOT_MATCH("Passwords do not match"),
     VALID
+}
+enum class SigningUpState {
+    INITIAL,
+    SIGNING_UP,
+    FAILED
 }
 @Composable
 private fun SignUpForm(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    // switch to validating while typing if user failed once.
-    var validationFailed by remember { mutableStateOf(false) }
+    var signingUpState by remember { mutableStateOf(SigningUpState.INITIAL) }
 
     var email by remember { mutableStateOf("") }
-    var emailValid by remember { mutableStateOf(EmailValidation.VALID) }
-    val emailValidation = {
+    var emailValid by remember { mutableStateOf(EmailValidationState.VALID) }
+    val emailValidationState = {
         emailValid = if (email.isBlank()) {
-            EmailValidation.EMPTY
+            EmailValidationState.EMPTY
         } else if (!email.endsWith("@ncsu.edu") || email.startsWith("@ncsu.edu")) {
-            EmailValidation.NOT_NC_STATE
+            EmailValidationState.NOT_NC_STATE
         } else {
-            EmailValidation.VALID
+            EmailValidationState.VALID
         }
 
-        emailValid == EmailValidation.VALID
+        emailValid == EmailValidationState.VALID
     }
 
     var password by remember { mutableStateOf("") }
-    var passwordValid by remember { mutableStateOf(PasswordValidation.VALID) }
-    val passwordValidation = {
+    var passwordValid by remember { mutableStateOf(PasswordValidationState.VALID) }
+    val passwordValidationState = {
         passwordValid = if (password.isBlank()) {
-            PasswordValidation.EMPTY
+            PasswordValidationState.EMPTY
         } else {
-            PasswordValidation.VALID
+            PasswordValidationState.VALID
         }
 
-        passwordValid == PasswordValidation.VALID
+        passwordValid == PasswordValidationState.VALID
     }
 
     var confirmPassword by remember { mutableStateOf("") }
-    var confirmPasswordValid by remember { mutableStateOf(ConfirmPasswordValidation.VALID) }
-    val confirmPasswordValidation = {
+    var confirmPasswordValid by remember { mutableStateOf(ConfirmPasswordValidationState.VALID) }
+    val confirmPasswordValidationState = {
         confirmPasswordValid = if (confirmPassword.isBlank()) {
-            ConfirmPasswordValidation.EMPTY
+            ConfirmPasswordValidationState.EMPTY
         } else if (confirmPassword != password) {
-            ConfirmPasswordValidation.DOES_NOT_MATCH
+            ConfirmPasswordValidationState.DOES_NOT_MATCH
         } else {
-            ConfirmPasswordValidation.VALID
+            ConfirmPasswordValidationState.VALID
         }
 
-        confirmPasswordValid == ConfirmPasswordValidation.VALID
+        confirmPasswordValid == ConfirmPasswordValidationState.VALID
     }
 
 
     val allValid = {
-        val emailValidated = emailValidation()
-        val passwordValidated = passwordValidation()
-        val confirmPasswordValidated = confirmPasswordValidation()
+        val emailValidated = emailValidationState()
+        val passwordValidated = passwordValidationState()
+        val confirmPasswordValidated = confirmPasswordValidationState()
         emailValidated && passwordValidated && confirmPasswordValidated
     }
 
     Column(modifier = modifier) {
-        if (emailValid != EmailValidation.VALID) InvalidBanner(emailValid.description)
+        if (emailValid != EmailValidationState.VALID) InvalidBanner(emailValid.description)
         SignUpTextField(
             label = "E-Mail",
             value = email,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
             onValueChange = {
                 email = it
-                if (validationFailed) emailValidation()
+                if (signingUpState == SigningUpState.FAILED) emailValidationState()
             },
-            isError = emailValid != EmailValidation.VALID
+            isError = emailValid != EmailValidationState.VALID
         )
-        if (passwordValid != PasswordValidation.VALID) InvalidBanner(passwordValid.description)
+        if (passwordValid != PasswordValidationState.VALID) InvalidBanner(passwordValid.description)
         else Spacer(modifier = Modifier.padding(8.dp))
         SignUpTextField(
             label = "Password",
@@ -229,11 +234,11 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
             onValueChange = {
                 password = it
-                if (validationFailed) passwordValidation()
+                if (signingUpState == SigningUpState.FAILED) passwordValidationState()
             },
-            isError = passwordValid != PasswordValidation.VALID
+            isError = passwordValid != PasswordValidationState.VALID
         )
-        if (confirmPasswordValid != ConfirmPasswordValidation.VALID) InvalidBanner(confirmPasswordValid.description)
+        if (confirmPasswordValid != ConfirmPasswordValidationState.VALID) InvalidBanner(confirmPasswordValid.description)
         else Spacer(modifier = Modifier.padding(8.dp))
         SignUpTextField(label = "Confirm password",
             password = true,
@@ -241,9 +246,9 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
             onValueChange = {
                 confirmPassword = it
-                if (validationFailed) confirmPasswordValidation()
+                if (signingUpState == SigningUpState.FAILED) confirmPasswordValidationState()
             },
-            isError = confirmPasswordValid != ConfirmPasswordValidation.VALID
+            isError = confirmPasswordValid != ConfirmPasswordValidationState.VALID
         )
         Spacer(modifier = Modifier.padding(8.dp))
 
@@ -253,37 +258,49 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
             app.emailPasswordAuth.registerUser(email, password)
         }
 
+        val alpha = when (signingUpState) {
+            SigningUpState.SIGNING_UP -> 0.1f
+            else -> 1f
+        }
         GradientButton(
             gradient = Brush.horizontalGradient(
-                colors = listOf(Color(0xffffe501), Color(0xffffb320))
+                colors = listOf(Color(0xffffe501).copy(alpha), Color(0xffffb320).copy(alpha))
             ),
             modifier = Modifier
                 .fillMaxWidth(),
+            enabled = signingUpState != SigningUpState.SIGNING_UP,
             onClick = {
+                signingUpState = SigningUpState.SIGNING_UP
                 if (allValid()) {
                     // sign up
                     coroutineScope.launch {
                         try {
                             signUp(email, password)
                         } catch (e: UserAlreadyExistsException) {
-                            emailValid = EmailValidation.EMAIL_EXISTS
-                            validationFailed = true
+                            emailValid = EmailValidationState.EMAIL_EXISTS
+                            signingUpState = SigningUpState.FAILED
                             return@launch
                         } catch (e: BadRequestException) {
-                            passwordValid = PasswordValidation.SHORT
-                            validationFailed = true
+                            passwordValid = PasswordValidationState.SHORT
+                            signingUpState = SigningUpState.FAILED
+                            return@launch
+                        } catch (e: ConnectionException) {
+                            Toast.makeText(context, "No internet connection", Toast.LENGTH_SHORT).show()
+                            signingUpState = SigningUpState.FAILED
                             return@launch
                         } catch (e: Exception) {
-                            Toast.makeText(context, "Error signing up: ${e.message}", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                            signingUpState = SigningUpState.FAILED
                             return@launch
                         }
 
                         Toast.makeText(context, "User added", Toast.LENGTH_SHORT).show()
                         // go to other screen
                         context.startActivity(Intent(context, VerifyEmailSignUpActivity::class.java))
+                        signingUpState = SigningUpState.INITIAL
                     }
-                } else if (!validationFailed) {
-                    validationFailed = true
+                } else if (signingUpState != SigningUpState.FAILED) {
+                    signingUpState = SigningUpState.FAILED
                 }
             }
 
