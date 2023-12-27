@@ -261,7 +261,7 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
                     coroutineScope.launch {
                         signUp(email, password)
                     }
-                    Toast.makeText(context, "Signed up!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "User added", Toast.LENGTH_SHORT).show()
                     // go to other screen
                     context.startActivity(Intent(context, VerifyEmailSignUpActivity::class.java))
                 } else if (!validationFailed) {
