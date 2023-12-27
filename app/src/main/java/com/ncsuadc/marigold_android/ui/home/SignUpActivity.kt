@@ -57,6 +57,8 @@ import com.ncsuadc.marigold_android.ui.home.shared.SIGN_UP_TITLE_STYLE
 import com.ncsuadc.marigold_android.ui.home.shared.TitleText
 import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
 import io.realm.kotlin.mongodb.App
+import io.realm.kotlin.mongodb.exceptions.BadRequestException
+import io.realm.kotlin.mongodb.exceptions.UserAlreadyExistsException
 import kotlinx.coroutines.launch
 
 class SignUpActivity : ComponentActivity() {
@@ -139,10 +141,12 @@ private fun CreateAccountText(modifier: Modifier = Modifier) {
 enum class EmailValidation(val description: String? = null) {
     EMPTY("Please enter an e-mail"),
     NOT_NC_STATE("Please enter a valid NC State e-mail"),
+    EMAIL_EXISTS("An account with this e-mail already exists"),
     VALID
 }
 enum class PasswordValidation(val description: String? = null) {
     EMPTY("Please enter a password"),
+    SHORT("Password must be at least 6 characters"),
     VALID
 }
 enum class ConfirmPasswordValidation(val description: String? = null) {
@@ -259,11 +263,25 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
                 if (allValid()) {
                     // sign up
                     coroutineScope.launch {
-                        signUp(email, password)
+                        try {
+                            signUp(email, password)
+                        } catch (e: UserAlreadyExistsException) {
+                            emailValid = EmailValidation.EMAIL_EXISTS
+                            validationFailed = true
+                            return@launch
+                        } catch (e: BadRequestException) {
+                            passwordValid = PasswordValidation.SHORT
+                            validationFailed = true
+                            return@launch
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Error signing up: ${e.message}", Toast.LENGTH_LONG).show()
+                            return@launch
+                        }
+
+                        Toast.makeText(context, "User added", Toast.LENGTH_SHORT).show()
+                        // go to other screen
+                        context.startActivity(Intent(context, VerifyEmailSignUpActivity::class.java))
                     }
-                    Toast.makeText(context, "User added", Toast.LENGTH_SHORT).show()
-                    // go to other screen
-                    context.startActivity(Intent(context, VerifyEmailSignUpActivity::class.java))
                 } else if (!validationFailed) {
                     validationFailed = true
                 }
