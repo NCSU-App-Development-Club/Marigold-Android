@@ -19,14 +19,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material.icons.outlined.VisibilityOff
+
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -53,10 +52,10 @@ import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+
 import androidx.compose.ui.text.style.TextAlign
 import com.ncsuadc.marigold_android.ui.home.shared.InvalidBanner
+import com.ncsuadc.marigold_android.ui.home.shared.OnboardingTextField
 
 
 class SignInScreen : ComponentActivity() {
@@ -191,7 +190,7 @@ private fun SignInForm(modifier: Modifier = Modifier) {
 
     Column(modifier = modifier) {
         if (emailValid != EmailValidation.VALID) InvalidBanner(emailValid.description)
-        SignUpTextField(
+        OnboardingTextField(
             label = "E-Mail",
             value = email,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
@@ -203,7 +202,7 @@ private fun SignInForm(modifier: Modifier = Modifier) {
         )
         if (passwordValid != PasswordValidation.VALID) InvalidBanner(passwordValid.description)
         else Spacer(modifier = Modifier.padding(8.dp))
-        SignUpTextField(
+        OnboardingTextField(
             label = "Password",
             password = true, value = password,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
@@ -264,54 +263,54 @@ private fun SignInForm(modifier: Modifier = Modifier) {
 
 }
 
-@Composable
-private fun SignUpTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    keyboardOptions: KeyboardOptions,
-    modifier: Modifier = Modifier,
-    isError : Boolean = false,
-    password: Boolean = false,
-    label: String = "",
-) {
-    var passwordVisibility by remember { mutableStateOf(password) }
-
-    androidx.compose.material3.TextField(
-        value = value,
-        isError = isError,
-        visualTransformation = if (!passwordVisibility)
-            VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = keyboardOptions,
-        singleLine = true,
-        onValueChange = onValueChange,
-        label = { Text(text = label) },
-        shape = MaterialTheme.shapes.medium,
-        trailingIcon = if (password) {
-            {
-                IconButton(onClick = {
-                    passwordVisibility = !passwordVisibility
-                    // log output kt
-                }, modifier = Modifier.padding(end = 8.dp)) {
-                    Icon(
-                        imageVector = if (passwordVisibility)
-                            Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
-                        contentDescription = "Visibility",
-                        tint = Color(0xffbfbfbf),
-                    )
-                }
-            }
-        } else null,
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            errorIndicatorColor = Color.Transparent,
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(modifier)
-    )
-}
+//@Composable
+//private fun SignUpTextField(
+//    value: String,
+//    onValueChange: (String) -> Unit,
+//    keyboardOptions: KeyboardOptions,
+//    modifier: Modifier = Modifier,
+//    isError : Boolean = false,
+//    password: Boolean = false,
+//    label: String = "",
+//) {
+//    var passwordVisibility by remember { mutableStateOf(password) }
+//
+//    androidx.compose.material3.TextField(
+//        value = value,
+//        isError = isError,
+//        visualTransformation = if (!passwordVisibility)
+//            VisualTransformation.None else PasswordVisualTransformation(),
+//        keyboardOptions = keyboardOptions,
+//        singleLine = true,
+//        onValueChange = onValueChange,
+//        label = { Text(text = label) },
+//        shape = MaterialTheme.shapes.medium,
+//        trailingIcon = if (password) {
+//            {
+//                IconButton(onClick = {
+//                    passwordVisibility = !passwordVisibility
+//                    // log output kt
+//                }, modifier = Modifier.padding(end = 8.dp)) {
+//                    Icon(
+//                        imageVector = if (passwordVisibility)
+//                            Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
+//                        contentDescription = "Visibility",
+//                        tint = Color(0xffbfbfbf),
+//                    )
+//                }
+//            }
+//        } else null,
+//        colors = TextFieldDefaults.colors(
+//            focusedIndicatorColor = Color.Transparent,
+//            unfocusedIndicatorColor = Color.Transparent,
+//            disabledIndicatorColor = Color.Transparent,
+//            errorIndicatorColor = Color.Transparent,
+//        ),
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .then(modifier)
+//    )
+//}
 
 
 
