@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ncsuadc.marigold_android.ui.home.shared.GradientButton
 import com.ncsuadc.marigold_android.ui.home.shared.InvalidBanner
+import com.ncsuadc.marigold_android.ui.home.shared.OnboardingTextField
 import com.ncsuadc.marigold_android.ui.home.shared.SIGN_UP_TITLE_STYLE
 import com.ncsuadc.marigold_android.ui.home.shared.TitleText
 import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
@@ -205,7 +206,7 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
 
     Column(modifier = modifier) {
         if (emailValid != EmailValidation.VALID) InvalidBanner(emailValid.description)
-        SignUpTextField(
+        OnboardingTextField(
             label = "E-Mail",
             value = email,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
@@ -217,7 +218,7 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
         )
         if (passwordValid != PasswordValidation.VALID) InvalidBanner(passwordValid.description)
         else Spacer(modifier = Modifier.padding(8.dp))
-        SignUpTextField(
+        OnboardingTextField(
             label = "Password",
             password = true, value = password,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
@@ -229,7 +230,7 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
         )
         if (confirmPasswordValid != ConfirmPasswordValidation.VALID) InvalidBanner(confirmPasswordValid.description)
         else Spacer(modifier = Modifier.padding(8.dp))
-        SignUpTextField(label = "Confirm password",
+        OnboardingTextField(label = "Confirm password",
             password = true,
             value = confirmPassword,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
@@ -266,53 +267,53 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
     }
 }
 
-// Should probably put in a common file with SignInActivity
-// when that's done so they can both use one
-@Composable
-private fun SignUpTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    keyboardOptions: KeyboardOptions,
-    modifier: Modifier = Modifier,
-    isError : Boolean = false,
-    password: Boolean = false,
-    label: String = "",
-) {
-    var passwordVisibility by remember { mutableStateOf(password) }
-
-    TextField(
-        value = value,
-        isError = isError,
-        visualTransformation = if (!passwordVisibility)
-            VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = keyboardOptions,
-        singleLine = true,
-        onValueChange = onValueChange,
-        label = { Text(text = label) },
-        shape = MaterialTheme.shapes.medium,
-        trailingIcon =  if (password) {
-            {
-                IconButton(onClick = {
-                    passwordVisibility = !passwordVisibility
-                    // log output kt
-                }, modifier = Modifier.padding(end = 8.dp)) {
-                    Icon(
-                        imageVector = if (passwordVisibility)
-                            Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
-                        contentDescription = "Visibility",
-                        tint = Color(0xffbfbfbf),
-                    )
-                }
-            }
-        } else null,
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            errorIndicatorColor = Color.Transparent,
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(modifier)
-    )
-}
+//// Should probably put in a common file with SignInActivity
+//// when that's done so they can both use one
+//@Composable
+//private fun SignUpTextField(
+//    value: String,
+//    onValueChange: (String) -> Unit,
+//    keyboardOptions: KeyboardOptions,
+//    modifier: Modifier = Modifier,
+//    isError : Boolean = false,
+//    password: Boolean = false,
+//    label: String = "",
+//) {
+//    var passwordVisibility by remember { mutableStateOf(password) }
+//
+//    TextField(
+//        value = value,
+//        isError = isError,
+//        visualTransformation = if (!passwordVisibility)
+//            VisualTransformation.None else PasswordVisualTransformation(),
+//        keyboardOptions = keyboardOptions,
+//        singleLine = true,
+//        onValueChange = onValueChange,
+//        label = { Text(text = label) },
+//        shape = MaterialTheme.shapes.medium,
+//        trailingIcon =  if (password) {
+//            {
+//                IconButton(onClick = {
+//                    passwordVisibility = !passwordVisibility
+//                    // log output kt
+//                }, modifier = Modifier.padding(end = 8.dp)) {
+//                    Icon(
+//                        imageVector = if (passwordVisibility)
+//                            Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
+//                        contentDescription = "Visibility",
+//                        tint = Color(0xffbfbfbf),
+//                    )
+//                }
+//            }
+//        } else null,
+//        colors = TextFieldDefaults.colors(
+//            focusedIndicatorColor = Color.Transparent,
+//            unfocusedIndicatorColor = Color.Transparent,
+//            disabledIndicatorColor = Color.Transparent,
+//            errorIndicatorColor = Color.Transparent,
+//        ),
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .then(modifier)
+//    )
+//}
