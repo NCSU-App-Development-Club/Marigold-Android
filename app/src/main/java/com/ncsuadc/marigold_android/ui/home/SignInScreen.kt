@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -19,13 +18,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-
 import androidx.compose.material3.Icon
-
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -39,9 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-
 import androidx.compose.ui.text.font.FontWeight
-
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
@@ -52,11 +46,9 @@ import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-
 import androidx.compose.ui.text.style.TextAlign
 import com.ncsuadc.marigold_android.ui.home.shared.InvalidBanner
 import com.ncsuadc.marigold_android.ui.home.shared.OnboardingTextField
-
 
 class SignInScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -107,7 +99,7 @@ private fun SignInColumn(modifier: Modifier = Modifier) {
     ) {
 
         TitleText()
-        Spacer(modifier = Modifier.padding(15.dp))
+        Spacer(modifier = Modifier.padding(17.dp))
         SignInText()
         Spacer(modifier = Modifier.padding(12.dp))
         SignInForm()
@@ -155,29 +147,29 @@ private fun SignInForm(modifier: Modifier = Modifier) {
     var validationFailed by remember { mutableStateOf(false) }
 
     var email by remember { mutableStateOf("") }
-    var emailValid by remember { mutableStateOf(EmailValidation.VALID) }
+    var emailValid by remember { mutableStateOf(EmailValidationState.VALID) }
     val emailValidation = {
         emailValid = if (email.isBlank()) {
-            EmailValidation.EMPTY
+            EmailValidationState.EMPTY
         } else if (!email.endsWith("@ncsu.edu") || email.startsWith("@ncsu.edu")) {
-            EmailValidation.NOT_NC_STATE
+            EmailValidationState.NOT_NC_STATE
         } else {
-            EmailValidation.VALID
+            EmailValidationState.VALID
         }
 
-        emailValid == EmailValidation.VALID
+        emailValid == EmailValidationState.VALID
     }
 
     var password by remember { mutableStateOf("") }
-    var passwordValid by remember { mutableStateOf(PasswordValidation.VALID) }
+    var passwordValid by remember { mutableStateOf(PasswordValidationState.VALID) }
     val passwordValidation = {
         passwordValid = if (password.isBlank()) {
-            PasswordValidation.EMPTY
+            PasswordValidationState.EMPTY
         } else {
-            PasswordValidation.VALID
+            PasswordValidationState.VALID
         }
 
-        passwordValid == PasswordValidation.VALID
+        passwordValid == PasswordValidationState.VALID
     }
 
 
@@ -189,7 +181,7 @@ private fun SignInForm(modifier: Modifier = Modifier) {
     }
 
     Column(modifier = modifier) {
-        if (emailValid != EmailValidation.VALID) InvalidBanner(emailValid.description)
+        if (emailValid != EmailValidationState.VALID) InvalidBanner(emailValid.description)
         OnboardingTextField(
             label = "E-Mail",
             value = email,
@@ -198,9 +190,9 @@ private fun SignInForm(modifier: Modifier = Modifier) {
                 email = it
                 if (validationFailed) emailValidation()
             },
-            isError = emailValid != EmailValidation.VALID
+            isError = emailValid != EmailValidationState.VALID
         )
-        if (passwordValid != PasswordValidation.VALID) InvalidBanner(passwordValid.description)
+        if (passwordValid != PasswordValidationState.VALID) InvalidBanner(passwordValid.description)
         else Spacer(modifier = Modifier.padding(8.dp))
         OnboardingTextField(
             label = "Password",
@@ -210,13 +202,13 @@ private fun SignInForm(modifier: Modifier = Modifier) {
                 password = it
                 if (validationFailed) passwordValidation()
             },
-            isError = passwordValid != PasswordValidation.VALID
+            isError = passwordValid != PasswordValidationState.VALID
         )
 
         Spacer(modifier = Modifier.padding(4.dp))
 
         //Text with flow to forgot password screen
-        Row() {
+        Row {
             Text(
                 "Forgot Password?",
                 textAlign = TextAlign.Right,
@@ -229,7 +221,7 @@ private fun SignInForm(modifier: Modifier = Modifier) {
             )
         }
 
-        Spacer(modifier = Modifier.padding(12.dp)) //Bigger space for aesthetics, change? TODO
+        Spacer(modifier = Modifier.padding(14.dp)) //Bigger space for aesthetics, change? TODO
         GradientButton(
             gradient = Brush.horizontalGradient(
                 colors = listOf(Color(0xffffe501), Color(0xffffb320))
@@ -255,62 +247,11 @@ private fun SignInForm(modifier: Modifier = Modifier) {
         }
 
 
-
-
-
-
     }
 
 }
 
-//@Composable
-//private fun SignUpTextField(
-//    value: String,
-//    onValueChange: (String) -> Unit,
-//    keyboardOptions: KeyboardOptions,
-//    modifier: Modifier = Modifier,
-//    isError : Boolean = false,
-//    password: Boolean = false,
-//    label: String = "",
-//) {
-//    var passwordVisibility by remember { mutableStateOf(password) }
-//
-//    androidx.compose.material3.TextField(
-//        value = value,
-//        isError = isError,
-//        visualTransformation = if (!passwordVisibility)
-//            VisualTransformation.None else PasswordVisualTransformation(),
-//        keyboardOptions = keyboardOptions,
-//        singleLine = true,
-//        onValueChange = onValueChange,
-//        label = { Text(text = label) },
-//        shape = MaterialTheme.shapes.medium,
-//        trailingIcon = if (password) {
-//            {
-//                IconButton(onClick = {
-//                    passwordVisibility = !passwordVisibility
-//                    // log output kt
-//                }, modifier = Modifier.padding(end = 8.dp)) {
-//                    Icon(
-//                        imageVector = if (passwordVisibility)
-//                            Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
-//                        contentDescription = "Visibility",
-//                        tint = Color(0xffbfbfbf),
-//                    )
-//                }
-//            }
-//        } else null,
-//        colors = TextFieldDefaults.colors(
-//            focusedIndicatorColor = Color.Transparent,
-//            unfocusedIndicatorColor = Color.Transparent,
-//            disabledIndicatorColor = Color.Transparent,
-//            errorIndicatorColor = Color.Transparent,
-//        ),
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .then(modifier)
-//    )
-//}
+
 
 
 

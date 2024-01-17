@@ -1,5 +1,4 @@
 package com.ncsuadc.marigold_android.ui.home
-
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -18,15 +17,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,8 +37,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import com.ncsuadc.marigold_android.ATLAS_APP_ID
 import com.ncsuadc.marigold_android.ui.home.shared.GradientButton
 import com.ncsuadc.marigold_android.ui.home.shared.InvalidBanner
+import com.ncsuadc.marigold_android.ui.home.shared.OnboardingTextField
 import com.ncsuadc.marigold_android.ui.home.shared.SIGN_UP_TITLE_STYLE
 import com.ncsuadc.marigold_android.ui.home.shared.TitleText
 import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
@@ -61,7 +54,6 @@ import io.realm.kotlin.mongodb.exceptions.BadRequestException
 import io.realm.kotlin.mongodb.exceptions.ConnectionException
 import io.realm.kotlin.mongodb.exceptions.UserAlreadyExistsException
 import kotlinx.coroutines.launch
-
 class SignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -216,7 +208,7 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
 
     Column(modifier = modifier) {
         if (emailValid != EmailValidationState.VALID) InvalidBanner(emailValid.description)
-        SignUpTextField(
+        OnboardingTextField(
             label = "E-Mail",
             value = email,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
@@ -228,7 +220,7 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
         )
         if (passwordValid != PasswordValidationState.VALID) InvalidBanner(passwordValid.description)
         else Spacer(modifier = Modifier.padding(8.dp))
-        SignUpTextField(
+        OnboardingTextField(
             label = "Password",
             password = true, value = password,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
@@ -240,7 +232,7 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
         )
         if (confirmPasswordValid != ConfirmPasswordValidationState.VALID) InvalidBanner(confirmPasswordValid.description)
         else Spacer(modifier = Modifier.padding(8.dp))
-        SignUpTextField(label = "Confirm password",
+        OnboardingTextField(label = "Confirm password",
             password = true,
             value = confirmPassword,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
@@ -315,53 +307,3 @@ private fun SignUpForm(modifier: Modifier = Modifier) {
     }
 }
 
-// Should probably put in a common file with SignInActivity
-// when that's done so they can both use one
-@Composable
-private fun SignUpTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    keyboardOptions: KeyboardOptions,
-    modifier: Modifier = Modifier,
-    isError : Boolean = false,
-    password: Boolean = false,
-    label: String = "",
-) {
-    var passwordVisibility by remember { mutableStateOf(password) }
-
-    TextField(
-        value = value,
-        isError = isError,
-        visualTransformation = if (!passwordVisibility)
-            VisualTransformation.None else PasswordVisualTransformation(),
-        keyboardOptions = keyboardOptions,
-        singleLine = true,
-        onValueChange = onValueChange,
-        label = { Text(text = label) },
-        shape = MaterialTheme.shapes.medium,
-        trailingIcon =  if (password) {
-            {
-                IconButton(onClick = {
-                    passwordVisibility = !passwordVisibility
-                    // log output kt
-                }, modifier = Modifier.padding(end = 8.dp)) {
-                    Icon(
-                        imageVector = if (passwordVisibility)
-                            Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
-                        contentDescription = "Visibility",
-                        tint = Color(0xffbfbfbf),
-                    )
-                }
-            }
-        } else null,
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            errorIndicatorColor = Color.Transparent,
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(modifier)
-    )
-}
