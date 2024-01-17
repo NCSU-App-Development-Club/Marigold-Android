@@ -1,6 +1,6 @@
 package com.ncsuadc.marigold_android.ui.home
 
-import android.content.Intent
+//import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -43,7 +43,7 @@ import com.ncsuadc.marigold_android.ui.home.shared.GradientButton
 import com.ncsuadc.marigold_android.ui.home.shared.SIGN_UP_TITLE_STYLE
 import com.ncsuadc.marigold_android.ui.home.shared.TitleText
 import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
-import androidx.compose.ui.platform.LocalContext
+//import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -142,7 +142,7 @@ private fun SignInText(modifier: Modifier = Modifier) {
 @Composable
 private fun SignInForm(modifier: Modifier = Modifier) {
 
-    val context = LocalContext.current
+  //  val context = LocalContext.current
 
     var validationFailed by remember { mutableStateOf(false) }
 
@@ -231,7 +231,7 @@ private fun SignInForm(modifier: Modifier = Modifier) {
             onClick = {
                 if (allValid()) {
                     // go to other screen
-                    context.startActivity(Intent(context, VerifyEmailSignUpActivity::class.java))
+//                    context.startActivity(Intent(context, VerifyEmailSignUpActivity::class.java))
                 } else if (!validationFailed) {
                     validationFailed = true
                 }
