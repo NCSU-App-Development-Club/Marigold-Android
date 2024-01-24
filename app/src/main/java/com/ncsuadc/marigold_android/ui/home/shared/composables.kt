@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -140,22 +142,29 @@ fun PostListItem(post: Post, club: Club) {
                 Text("${post.postedBy?.firstName} ${post.postedBy?.lastName}", style=MaterialTheme.typography.bodySmall)
             }
         }
-        Row() {
-
+        Row {
             Text(post.body, maxLines = 6, overflow= TextOverflow.Ellipsis)
-
         }
         
         val myString = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(post.postedAt)
         val timeString = DateFormat.getPatternInstance(DateFormat.HOUR_MINUTE).format(post.postedAt)
                                                              
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceEvenly) {
             Text(
                 "${myString} ● ${timeString}",
                 style=MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)   ,
                 modifier = Modifier.padding(end = 16.dp)
             )
-            Text("Ask a question", modifier = Modifier.clickable {  }, style=MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold))
+            Row {
+                Image(painter = painterResource(id = R.drawable.home_post_chat_icon_),
+                    contentDescription = "Club profile picture",
+                    alignment = Alignment.Center,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(20.dp)
+                )
+                Text("Ask a question", modifier = Modifier.clickable {  }, style=MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold))
+            }
         }
     }
 
@@ -181,6 +190,7 @@ fun PostPreview() {
     }
     
 }
+@Composable
 fun OnboardingTextField(
     value: String,
     onValueChange: (String) -> Unit,
