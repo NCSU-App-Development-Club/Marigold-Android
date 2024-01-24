@@ -14,15 +14,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,6 +45,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -80,6 +91,7 @@ fun GradientButton(
     gradient : Brush,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = { },
+    enabled: Boolean = true,
     content: @Composable () -> Unit
 ) {
     Button(
@@ -87,6 +99,7 @@ fun GradientButton(
         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
         shape = MaterialTheme.shapes.medium,
         contentPadding = PaddingValues(),
+        enabled = enabled,
         onClick = { onClick() },
     ) {
         Row(
@@ -167,4 +180,51 @@ fun PostPreview() {
             postedBy = User(firstName = "Peter", lastName = "Pressler")), club = Club(fullName = "Sewing Club"))
     }
     
+}
+fun OnboardingTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    keyboardOptions: KeyboardOptions,
+    modifier: Modifier = Modifier,
+    isError : Boolean = false,
+    password: Boolean = false,
+    label: String = "",
+) {
+    var passwordVisibility by remember { mutableStateOf(password) }
+
+    androidx.compose.material3.TextField(
+        value = value,
+        isError = isError,
+        visualTransformation = if (!passwordVisibility)
+            VisualTransformation.None else PasswordVisualTransformation(),
+        keyboardOptions = keyboardOptions,
+        singleLine = true,
+        onValueChange = onValueChange,
+        label = { Text(text = label) },
+        shape = MaterialTheme.shapes.medium,
+        trailingIcon = if (password) {
+            {
+                IconButton(onClick = {
+                    passwordVisibility = !passwordVisibility
+                    // log output kt
+                }, modifier = Modifier.padding(end = 8.dp)) {
+                    Icon(
+                        imageVector = if (passwordVisibility)
+                            Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
+                        contentDescription = "Visibility",
+                        tint = Color(0xffbfbfbf),
+                    )
+                }
+            }
+        } else null,
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(modifier)
+    )
 }

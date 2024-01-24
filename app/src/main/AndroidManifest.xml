@@ -19,6 +19,16 @@
             android:theme="@style/Theme.Marigold" />
         <activity
             android:name=".ui.home.SignUpActivity"
+            android:exported="false"
+            android:label="@string/title_activity_sign_up"
+            android:theme="@style/Theme.Marigold" />
+        <activity
+            android:name=".ui.home.SignInScreen"
+            android:exported="false"
+            android:label="@string/title_activity_sign_in"
+            android:theme="@style/Theme.Marigold" />
+        <activity
+            android:name=".ui.home.HomeActivity"
             android:exported="true"
             android:label="@string/title_activity_sign_up"
             android:theme="@style/Theme.Marigold">
