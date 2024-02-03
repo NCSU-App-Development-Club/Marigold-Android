@@ -1,10 +1,13 @@
 package com.ncsuadc.marigold_android.ui.home
 
 //import android.content.Intent
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -32,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -111,27 +116,35 @@ private fun SignInColumn(modifier: Modifier = Modifier) {
 
 @Composable
 private fun SignInText(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val greeting = buildAnnotatedString {
+        withStyle(SIGN_UP_TITLE_STYLE.toSpanStyle()) {
+            append("Welcome Back!\n")
+        }
+        append("Don't have an account? ")
+        pushStringAnnotation(tag = "sign-up", annotation = "sign-up")
+        withStyle(
+            SpanStyle(
+                color = Color(0xffffb320),
+                textDecoration = TextDecoration.Underline
+            )
+        ) {
+            append("Sign Up ")
+        }
+        pop()
 
-    Text(
-        buildAnnotatedString {
-            withStyle(SIGN_UP_TITLE_STYLE.toSpanStyle()) {
-                append("Welcome Back!\n")
+    }
+    //Clickable text that only responds to clicks on the 37th character (start of "Sign Up" button
+    ClickableText(
+        onClick = { offset ->
+            if(offset in 37..44){
+                context.startActivity(Intent(context, SignUpActivity::class.java))
             }
-            append("Don't have an account? ")
-            pushStringAnnotation(tag = "sign-up", annotation = "sign-up")
-            withStyle(
-                SpanStyle(
-                    color = Color(0xffffb320),
-                    textDecoration = TextDecoration.Underline
-                )
-            ) {
-                append("Sign Up")
-            }
-            pop()
-
         },
+        text= greeting,
         style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold),
-        modifier = modifier
+        modifier = modifier.clickable {
+        }
     )
 
 }

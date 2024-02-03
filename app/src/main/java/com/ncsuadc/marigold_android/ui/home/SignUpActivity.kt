@@ -2,6 +2,7 @@ package com.ncsuadc.marigold_android.ui.home
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -108,24 +110,32 @@ private fun SignUpColumnPreview() {
 
 @Composable
 private fun CreateAccountText(modifier: Modifier = Modifier) {
-    Text(
-        buildAnnotatedString {
-            withStyle(SIGN_UP_TITLE_STYLE.toSpanStyle()) {
-                append("Create an account.\n")
-            }
-            append("Already have an account? ")
-            pushStringAnnotation(tag = "sign-in", annotation = "sign-in")
-            withStyle(
-                SpanStyle(
-                    color = Color(0xffffb320),
-                    textDecoration = TextDecoration.Underline
-                )
-            ) {
-                append("Sign In")
-            }
-            pop()
+    val context = LocalContext.current
+    val greeting = buildAnnotatedString {
+        withStyle(SIGN_UP_TITLE_STYLE.toSpanStyle()) {
+            append("Create an account.\n")
+        }
+        append("Already have an account? ")
+        pushStringAnnotation(tag = "sign-in", annotation = "sign-in")
+        withStyle(
+            SpanStyle(
+                color = Color(0xffffb320),
+                textDecoration = TextDecoration.Underline
+            )
+        ) {
+            append("Sign In ")
+        }
+        pop()
 
+    }
+    //Clickable text that only responds to clicks on the 38th character (start of "Sign In" button
+    ClickableText(
+        onClick = {offset ->
+            if(offset in 44..51){
+                context.startActivity(Intent(context, SignInScreen::class.java))
+            }
         },
+        text = greeting,
         style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold),
         modifier = modifier
     )
