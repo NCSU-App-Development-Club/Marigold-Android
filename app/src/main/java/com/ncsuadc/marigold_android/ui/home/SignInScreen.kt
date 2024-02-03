@@ -143,8 +143,7 @@ private fun SignInText(modifier: Modifier = Modifier) {
         },
         text= greeting,
         style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold),
-        modifier = modifier.clickable {
-        }
+        modifier = modifier
     )
 
 }
