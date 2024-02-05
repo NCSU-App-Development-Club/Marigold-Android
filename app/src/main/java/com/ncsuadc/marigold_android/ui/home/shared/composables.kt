@@ -13,9 +13,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
@@ -23,6 +26,9 @@ import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,6 +45,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -55,6 +63,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ncsuadc.marigold_android.R
 import com.ncsuadc.marigold_android.domain.Club
+import com.ncsuadc.marigold_android.domain.Event
 import com.ncsuadc.marigold_android.domain.Post
 import com.ncsuadc.marigold_android.domain.User
 
@@ -90,7 +99,7 @@ fun TitleText(modifier: Modifier = Modifier) {
 // Feel free to change it if you disagree.
 @Composable
 fun GradientButton(
-    gradient : Brush,
+    gradient: Brush,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = { },
     enabled: Boolean = true,
@@ -117,61 +126,159 @@ fun GradientButton(
 
 @Composable
 fun InvalidBanner(text: String?, modifier: Modifier = Modifier) {
-    Row(modifier = Modifier
-        .padding(top = 8.dp, bottom = 8.dp)
-        .then(modifier), verticalAlignment = Alignment.CenterVertically) {
-        Icon(Icons.Filled.Error, contentDescription = "Error", tint = MaterialTheme.colorScheme.error)
+    Row(
+        modifier = Modifier
+            .padding(top = 8.dp, bottom = 8.dp)
+            .then(modifier), verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            Icons.Filled.Error,
+            contentDescription = "Error",
+            tint = MaterialTheme.colorScheme.error
+        )
         Spacer(modifier = Modifier.padding(4.dp))
         Text(text ?: "", color = MaterialTheme.colorScheme.error)
     }
 }
 
 @Composable
+fun HomeLargePromoCard(e: Event) {
+    Card(
+        shape = RoundedCornerShape(24.dp),
+        elevation = CardDefaults.elevatedCardElevation()
+    ) {
+        Column {
+            Image(
+                painter = painterResource(id = R.drawable.wolfstock_promo),
+                contentDescription = "Event promotional image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        // The cut-off section at the bottom
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .height(75.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(id = R.drawable.uab_logo),
+                    contentDescription = "Club logo",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(30.dp)
+                        .clip(CircleShape)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = e.title,
+                    color = Color.Black, // Use the appropriate red color
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = e.club?.shortName ?: "",
+                    color = Color.Black,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1
+                )
+            }
+            val myString = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(e.date)
+            val dateString = DateFormat.getPatternInstance(DateFormat.ABBR_WEEKDAY).format(e.date)
+            val timeString = DateFormat.getPatternInstance(DateFormat.HOUR_MINUTE).format(e.date)
+            Text(
+                text = "${e.location} • $dateString, $timeString",
+                color = Color.Black,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                maxLines = 1,
+                modifier = Modifier.padding(start=38.dp)
+
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PromoPreview() {
+    HomeLargePromoCard(
+        e = Event(
+            club = Club(shortName = "NCSU UAB"),
+            title = "Wolfstock 2023",
+            location = "Talley Student Union"
+        )
+    )
+}
+
+@Composable
 fun PostListItem(post: Post, club: Club) {
     Column(modifier = Modifier.padding(8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Image(painter = painterResource(id = R.drawable.android_club_pfp),
+            Image(
+                painter = painterResource(id = R.drawable.android_club_pfp),
                 contentDescription = "Club profile picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(35.dp)
                     .clip(CircleShape)
             )
-            Column(modifier = Modifier.padding(start=8.dp)) {
-                Text(club.fullName, style=MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
-                Text("${post.postedBy?.firstName} ${post.postedBy?.lastName}", style=MaterialTheme.typography.bodySmall)
+            Column(modifier = Modifier.padding(start = 8.dp)) {
+                Text(
+                    club.fullName,
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                )
+                Text(
+                    "${post.postedBy?.firstName} ${post.postedBy?.lastName}",
+                    style = MaterialTheme.typography.bodySmall
+                )
             }
         }
         Row {
-            Text(post.body, maxLines = 6, overflow= TextOverflow.Ellipsis)
+            Text(post.body, maxLines = 6, overflow = TextOverflow.Ellipsis)
         }
-        
+
         val myString = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(post.postedAt)
         val timeString = DateFormat.getPatternInstance(DateFormat.HOUR_MINUTE).format(post.postedAt)
-                                                             
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceEvenly) {
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
             Text(
                 "${myString} ● ${timeString}",
-                style=MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)   ,
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(end = 16.dp)
             )
             Row {
-                Image(painter = painterResource(id = R.drawable.home_post_chat_icon_),
+                Image(
+                    painter = painterResource(id = R.drawable.home_post_chat_icon_),
                     contentDescription = "Club profile picture",
                     alignment = Alignment.Center,
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .size(20.dp)
                 )
-                Text("Ask a question", modifier = Modifier.clickable {  }, style=MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold))
+                Text(
+                    "Ask a question",
+                    modifier = Modifier.clickable { },
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                )
             }
         }
     }
 
-    
+
 }
 
-@Preview(showBackground =  true)
+@Preview(showBackground = true)
 @Composable
 fun PostPreview() {
     Column {
@@ -184,19 +291,24 @@ fun PostPreview() {
             Club(fullName = "App Development Club")
 
         )
-        PostListItem(post =
-        Post("Lorem ipsum dolor sit amet consectetur. Etiam ipsum tempus sed accumsan dui nunc venenatis ultricies. Diam sed tellus eget vel aliquam facilisi. Sed porta dictumst nunc urna elementum quisque. Nunc nibh sodales arcu pulvinar nulla eu sit sed sapien. Lorem ipsum dolor sit amet consectetur. Etiam ipsum tempus sed accumsan dui nunc venenatis ultricies. Diam sed tellus eget vel aliquam facilisi. .Malesuada lectus felis quis suspendisse vulputate... View More",
-            postedBy = User(firstName = "Peter", lastName = "Pressler")), club = Club(fullName = "Sewing Club"))
+        PostListItem(
+            post =
+            Post(
+                "Lorem ipsum dolor sit amet consectetur. Etiam ipsum tempus sed accumsan dui nunc venenatis ultricies. Diam sed tellus eget vel aliquam facilisi. Sed porta dictumst nunc urna elementum quisque. Nunc nibh sodales arcu pulvinar nulla eu sit sed sapien. Lorem ipsum dolor sit amet consectetur. Etiam ipsum tempus sed accumsan dui nunc venenatis ultricies. Diam sed tellus eget vel aliquam facilisi. .Malesuada lectus felis quis suspendisse vulputate... View More",
+                postedBy = User(firstName = "Peter", lastName = "Pressler")
+            ), club = Club(fullName = "Sewing Club")
+        )
     }
-    
+
 }
+
 @Composable
 fun OnboardingTextField(
     value: String,
     onValueChange: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
-    isError : Boolean = false,
+    isError: Boolean = false,
     password: Boolean = false,
     label: String = "",
 ) {
