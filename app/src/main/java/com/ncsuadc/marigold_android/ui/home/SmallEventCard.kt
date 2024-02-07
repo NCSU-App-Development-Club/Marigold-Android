@@ -65,4 +65,5 @@ fun SmallEventCard(event: Event) {
 @Composable
 fun OneSmallEvent() {
     SmallEventCard(Event(title = "Pickup Soccer") )
+
 }
