@@ -3,6 +3,8 @@ package com.ncsuadc.marigold_android.ui.home
 import android.app.Activity
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -160,6 +162,7 @@ fun VerifyForm(modifier: Modifier = Modifier) {
     }
 
     val localFocusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     Column(modifier = modifier) {
         Text("We sent a verification code to your email. Please input the code below.",
@@ -262,7 +265,19 @@ fun VerifyForm(modifier: Modifier = Modifier) {
                 .fillMaxWidth(),
             onClick = {
                 if (validation()) {
-                    // TODO: Verify email
+                    val verify = {
+                        (digit1 + digit2 + digit3 + digit4).toInt()
+                        Log.d("emailtest", "todo send to mongo");
+                        true
+                    }
+                    if (verify()) {
+                        val toast = Toast.makeText(context, "User successfully added and verified", Toast.LENGTH_LONG)
+                        toast.show()
+                        //todo send the user somewhere after success - home screen maybe?
+                    } else {
+                        val toast = Toast.makeText(context, "User could not be verified", Toast.LENGTH_LONG)
+                        toast.show()
+                    }
                 }
             }
 
