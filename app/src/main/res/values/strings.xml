@@ -28,5 +28,6 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="title_activity_sign_in">SignInScreen</string>
     <string name="title_activity_verify_email_sign_up">VerifyEmailSignUpActivity</string>
 </resources>
