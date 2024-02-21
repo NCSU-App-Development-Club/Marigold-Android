@@ -54,18 +54,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
-import com.mongodb.ConnectionString
-import com.mongodb.MongoClientSettings
-import com.mongodb.ServerApi
-import com.mongodb.ServerApiVersion
-import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.ncsuadc.marigold_android.ui.home.shared.GradientButton
 import com.ncsuadc.marigold_android.ui.home.shared.InvalidBanner
 import com.ncsuadc.marigold_android.ui.home.shared.SIGN_UP_TITLE_STYLE
 import com.ncsuadc.marigold_android.ui.home.shared.TitleText
 import com.ncsuadc.marigold_android.ui.theme.MarigoldTheme
-import kotlinx.coroutines.runBlocking
-import org.bson.Document
 
 class VerifyEmailSignUpActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -164,7 +157,8 @@ fun VerifyForm(modifier: Modifier = Modifier) {
 
     var valid by remember { mutableStateOf(true) }
     val validation = {
-        valid = digit1.isNotEmpty() && digit2.isNotEmpty() && digit3.isNotEmpty() && digit4.isNotEmpty()
+        valid =
+            digit1.isNotEmpty() && digit2.isNotEmpty() && digit3.isNotEmpty() && digit4.isNotEmpty()
         valid
     }
 
@@ -172,9 +166,13 @@ fun VerifyForm(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     Column(modifier = modifier) {
-        Text("We sent a verification code to your email. Please input the code below.",
-            style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold))
-        if (!valid) InvalidBanner(text = "Please enter a valid verification code.") else Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            "We sent a verification code to your email. Please input the code below.",
+            style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold)
+        )
+        if (!valid) InvalidBanner(text = "Please enter a valid verification code.") else Spacer(
+            modifier = Modifier.padding(8.dp)
+        )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
@@ -276,36 +274,19 @@ fun VerifyForm(modifier: Modifier = Modifier) {
                         (digit1 + digit2 + digit3 + digit4).toInt()
                         Log.d("emailtest", "todo send to mongo");
 
-                        // REMOVE THIS BEFORE PUSHING
-                        val connectionString = ""
-
-                        val serverApi = ServerApi.builder()
-                            .version(ServerApiVersion.V1)
-                            .build()
-
-                        val mongoClientSettings = MongoClientSettings.builder()
-                            .applyConnectionString(ConnectionString(connectionString))
-                            .serverApi(serverApi)
-                            .build()
-
-                        MongoClient.create(mongoClientSettings).use { mongoClient ->
-                            val database = mongoClient.getDatabase("admin")
-
-                            runBlocking {
-                                database.runCommand(Document("ping", 1))
-                            }
-
-                            Log.d("asdf", "connected to mongo")
-                        }
-
                         true
                     }
                     if (verify()) {
-                        val toast = Toast.makeText(context, "User successfully added and verified", Toast.LENGTH_LONG)
+                        val toast = Toast.makeText(
+                            context,
+                            "User successfully added and verified",
+                            Toast.LENGTH_LONG
+                        )
                         toast.show()
                         //todo send the user somewhere after success - home screen maybe?
                     } else {
-                        val toast = Toast.makeText(context, "User could not be verified", Toast.LENGTH_LONG)
+                        val toast =
+                            Toast.makeText(context, "User could not be verified", Toast.LENGTH_LONG)
                         toast.show()
                     }
                 }
@@ -317,7 +298,8 @@ fun VerifyForm(modifier: Modifier = Modifier) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Verify Email",
-                modifier = Modifier.width(24.dp))
+                modifier = Modifier.width(24.dp)
+            )
         }
     }
 }
@@ -345,8 +327,10 @@ private fun VerifyCodeTextField(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
         ),
-        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center, fontSize = 30.sp,
-            baselineShift = BaselineShift(0.6f)),
+        textStyle = LocalTextStyle.current.copy(
+            textAlign = TextAlign.Center, fontSize = 30.sp,
+            baselineShift = BaselineShift(0.6f)
+        ),
         modifier = Modifier
             .requiredWidth(75.dp)
 

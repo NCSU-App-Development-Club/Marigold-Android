@@ -67,9 +67,6 @@ dependencies {
 //    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 //
 //    //Realm
-    implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.11.0")
-    implementation("org.mongodb:bson-kotlin:4.11.0")
-
     implementation ("io.realm.kotlin:library-base:1.13.0")
     implementation ("io.realm.kotlin:library-sync:1.13.0") // If using Device Sync
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0") // If using coroutines with the SDK
