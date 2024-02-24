@@ -34,7 +34,7 @@ import com.ncsuadc.marigold_android.ui.home.SmallEventCard
 
 @Composable
 fun ClubListingCard(club: Club) {
-    Card() {
+    Card {
         Row() {
             Column() {
                 Image(painter = painterResource(id = R.drawable.uab_logo),
@@ -64,8 +64,6 @@ fun ClubListingCard(club: Club) {
                     )
 
                 }
-
-
                 Row() {
                     Text(
                         text = "The University Activities Board puts on programs with endless and ever-changing topics.",
@@ -77,28 +75,29 @@ fun ClubListingCard(club: Club) {
             }
 
             Column(verticalArrangement = Arrangement.Center) {
-                    FilledTonalButton(onClick = { onClick() },
-                        modifier = Modifier
-                            .height(20.dp)
-                            .width(100.dp),
-                        shape = ButtonDefaults.filledTonalShape,
-                        colors = ButtonDefaults.filledTonalButtonColors()
-                            ) {
-                        Text(text = "Join",
-                            fontSize = 12.sp,
-                            color = Color.Black)
-                    }
-                }
+                FilledTonalButtonExample()
             }
         }
 
     }
 
-fun onClick() {
-    TODO("Not yet implemented")
 }
 
-
+@Composable
+fun FilledTonalButtonExample() {
+    FilledTonalButton(
+        onClick = { null },
+        modifier = Modifier
+            .height(20.dp)
+            .width(100.dp),
+        shape = ButtonDefaults.filledTonalShape,
+        colors = ButtonDefaults.filledTonalButtonColors()
+    ) {
+        Text(text = "Join",
+            fontSize = 12.sp,
+            color = Color.Black)
+    }
+}
 
 @Preview
 @Composable
