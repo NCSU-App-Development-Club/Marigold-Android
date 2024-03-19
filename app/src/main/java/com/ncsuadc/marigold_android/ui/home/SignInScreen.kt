@@ -154,7 +154,7 @@ private fun SignInText(modifier: Modifier = Modifier) {
 @Composable
 private fun SignInForm(modifier: Modifier = Modifier) {
 
-  //  val context = LocalContext.current
+    val context = LocalContext.current
 
     var validationFailed by remember { mutableStateOf(false) }
 
@@ -243,7 +243,7 @@ private fun SignInForm(modifier: Modifier = Modifier) {
             onClick = {
                 if (allValid()) {
                     // go to other screen
-//                    context.startActivity(Intent(context, VerifyEmailSignUpActivity::class.java))
+                    context.startActivity(Intent(context, VerifyEmailSignUpActivity::class.java))
                 } else if (!validationFailed) {
                     validationFailed = true
                 }

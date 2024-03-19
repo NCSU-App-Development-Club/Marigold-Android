@@ -3,6 +3,8 @@ package com.ncsuadc.marigold_android.ui.home
 import android.app.Activity
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -155,16 +157,22 @@ fun VerifyForm(modifier: Modifier = Modifier) {
 
     var valid by remember { mutableStateOf(true) }
     val validation = {
-        valid = digit1.isNotEmpty() && digit2.isNotEmpty() && digit3.isNotEmpty() && digit4.isNotEmpty()
+        valid =
+            digit1.isNotEmpty() && digit2.isNotEmpty() && digit3.isNotEmpty() && digit4.isNotEmpty()
         valid
     }
 
     val localFocusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     Column(modifier = modifier) {
-        Text("We sent a verification code to your email. Please input the code below.",
-            style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold))
-        if (!valid) InvalidBanner(text = "Please enter a valid verification code.") else Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            "We sent a verification code to your email. Please input the code below.",
+            style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold)
+        )
+        if (!valid) InvalidBanner(text = "Please enter a valid verification code.") else Spacer(
+            modifier = Modifier.padding(8.dp)
+        )
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
@@ -262,7 +270,25 @@ fun VerifyForm(modifier: Modifier = Modifier) {
                 .fillMaxWidth(),
             onClick = {
                 if (validation()) {
-                    // TODO: Verify email
+                    val verify = {
+                        (digit1 + digit2 + digit3 + digit4).toInt()
+                        Log.d("emailtest", "todo send to mongo");
+
+                        true
+                    }
+                    if (verify()) {
+                        val toast = Toast.makeText(
+                            context,
+                            "User successfully added and verified",
+                            Toast.LENGTH_LONG
+                        )
+                        toast.show()
+                        //todo send the user somewhere after success - home screen maybe?
+                    } else {
+                        val toast =
+                            Toast.makeText(context, "User could not be verified", Toast.LENGTH_LONG)
+                        toast.show()
+                    }
                 }
             }
 
@@ -272,7 +298,8 @@ fun VerifyForm(modifier: Modifier = Modifier) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Verify Email",
-                modifier = Modifier.width(24.dp))
+                modifier = Modifier.width(24.dp)
+            )
         }
     }
 }
@@ -300,8 +327,10 @@ private fun VerifyCodeTextField(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
         ),
-        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center, fontSize = 30.sp,
-            baselineShift = BaselineShift(0.6f)),
+        textStyle = LocalTextStyle.current.copy(
+            textAlign = TextAlign.Center, fontSize = 30.sp,
+            baselineShift = BaselineShift(0.6f)
+        ),
         modifier = Modifier
             .requiredWidth(75.dp)
 
