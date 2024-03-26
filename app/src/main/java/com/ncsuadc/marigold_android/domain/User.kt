@@ -4,21 +4,21 @@ import java.util.UUID
 
 
 data class User(
-   var _id: UUID = UUID.randomUUID(),
+    var _id: UUID = UUID.randomUUID(),
 
-   var clubs: List<Club> = listOf<Club>(),
+    var clubDisplays: List<ClubDisplay> = listOf<ClubDisplay>(),
 
-   var email: String = "",
+    var email: String = "",
 
-   var firstName: String = "",
+    var firstName: String = "",
 
-   var graduationYear: Long = 0,
+    var graduationYear: Long = 0,
 
-   var lastName: String = "",
+    var lastName: String = "",
 
-   var notifications: List<Notification> = listOf<Notification>(),
+    var notifications: List<Notification> = listOf<Notification>(),
 
-   var profileImageUrl: String = "",
+    var profileImageUrl: String = "",
 
-   var school: School? = null
+    var school: School? = null
 )

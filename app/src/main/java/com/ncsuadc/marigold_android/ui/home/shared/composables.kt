@@ -55,8 +55,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ncsuadc.marigold_android.R
+
 import com.ncsuadc.marigold_android.domain.Club
 import com.ncsuadc.marigold_android.domain.EventDisplay
+
 import com.ncsuadc.marigold_android.domain.Post
 import com.ncsuadc.marigold_android.domain.User
 
@@ -176,7 +178,7 @@ fun HomeLargePromoCard(e: EventDisplay) {
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
-                    text = e.club?.shortName ?: "",
+                    text = e.clubDisplay?.shortName ?: "",
                     color = Color.Black,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
@@ -212,7 +214,7 @@ fun PromoPreview() {
 }
 
 @Composable
-fun PostListItem(post: Post, club: Club) {
+fun PostListItem(post: Post, clubDisplay: ClubDisplay) {
     Column(modifier = Modifier.padding(8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
@@ -225,7 +227,7 @@ fun PostListItem(post: Post, club: Club) {
             )
             Column(modifier = Modifier.padding(start = 8.dp)) {
                 Text(
-                    club.fullName,
+                    clubDisplay.fullName,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
@@ -281,7 +283,7 @@ fun PostPreview() {
                         "Message textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage textMessage text",
                 postedBy = User(firstName = "Xavier", lastName = "Jones")
             ),
-            Club(fullName = "App Development Club")
+            ClubDisplay(fullName = "App Development Club")
 
         )
         PostListItem(
@@ -289,7 +291,7 @@ fun PostPreview() {
             Post(
                 "Lorem ipsum dolor sit amet consectetur. Etiam ipsum tempus sed accumsan dui nunc venenatis ultricies. Diam sed tellus eget vel aliquam facilisi. Sed porta dictumst nunc urna elementum quisque. Nunc nibh sodales arcu pulvinar nulla eu sit sed sapien. Lorem ipsum dolor sit amet consectetur. Etiam ipsum tempus sed accumsan dui nunc venenatis ultricies. Diam sed tellus eget vel aliquam facilisi. .Malesuada lectus felis quis suspendisse vulputate... View More",
                 postedBy = User(firstName = "Peter", lastName = "Pressler")
-            ), club = Club(fullName = "Sewing Club")
+            ), clubDisplay = ClubDisplay(fullName = "Sewing Club")
         )
     }
 
