@@ -5,13 +5,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,7 +25,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,15 +41,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -63,7 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ncsuadc.marigold_android.R
 import com.ncsuadc.marigold_android.domain.Club
-import com.ncsuadc.marigold_android.domain.Event
+import com.ncsuadc.marigold_android.domain.EventDisplay
 import com.ncsuadc.marigold_android.domain.Post
 import com.ncsuadc.marigold_android.domain.User
 
@@ -142,7 +135,7 @@ fun InvalidBanner(text: String?, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun HomeLargePromoCard(e: Event) {
+fun HomeLargePromoCard(e: EventDisplay) {
     Card(
         shape = RoundedCornerShape(24.dp),
         elevation = CardDefaults.elevatedCardElevation()
@@ -210,7 +203,7 @@ fun HomeLargePromoCard(e: Event) {
 @Composable
 fun PromoPreview() {
     HomeLargePromoCard(
-        e = Event(
+        e = EventDisplay(
             club = Club(shortName = "NCSU UAB"),
             title = "Wolfstock 2023",
             location = "Talley Student Union"

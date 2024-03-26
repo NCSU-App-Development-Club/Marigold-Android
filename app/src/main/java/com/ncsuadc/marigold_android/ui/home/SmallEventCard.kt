@@ -23,12 +23,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ncsuadc.marigold_android.R
-import com.ncsuadc.marigold_android.domain.Event
+import com.ncsuadc.marigold_android.domain.EventDisplay
 import com.ncsuadc.marigold_android.ui.theme.Blue80
 
 
 @Composable
-fun SmallEventCard(event: Event) {
+fun SmallEventCard(event: EventDisplay) {
     ElevatedCard(modifier = Modifier,
         colors = CardDefaults.cardColors(
             containerColor = Blue80
@@ -64,6 +64,6 @@ fun SmallEventCard(event: Event) {
 @Preview
 @Composable
 fun OneSmallEvent() {
-    SmallEventCard(Event(title = "Pickup Soccer") )
+    SmallEventCard(EventDisplay(title = "Pickup Soccer") )
 
 }
